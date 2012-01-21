@@ -1,0 +1,9 @@
+PROJECT(Exercise24)
+
+FIND_PACKAGE(ITK REQUIRED)
+
+INCLUDE(${ITK_USE_FILE})
+
+ADD_EXECUTABLE(DividerByTwoImageFilter24  main.cxx       )
+
+TARGET_LINK_LIBRARIES(DividerByTwoImageFilter24   ${ITK_LIBRARIES} )

@@ -1,0 +1,13 @@
+PROJECT(Exercise27)
+
+FIND_PACKAGE(ITK REQUIRED)
+
+INCLUDE(${ITK_USE_FILE})
+
+ADD_EXECUTABLE(ImageRedAdaptor27  main.cxx       )
+
+TARGET_LINK_LIBRARIES(ImageRedAdaptor27   ${ITK_LIBRARIES} )
+
+ADD_EXECUTABLE(ImageInvertAdaptor27  main2.cxx       )
+
+TARGET_LINK_LIBRARIES(ImageInvertAdaptor27   ${ITK_LIBRARIES} )

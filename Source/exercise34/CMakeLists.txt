@@ -1,0 +1,23 @@
+PROJECT(Exercise34)
+
+FIND_PACKAGE(ITK REQUIRED)
+IF( ITK_FOUND )
+  INCLUDE (${USE_ITK_FILE})
+ENDIF( ITK_FOUND )
+
+FIND_PACKAGE(VTK REQUIRED)
+IF( VTK_FOUND )
+  INCLUDE (${USE_VTK_FILE})
+ENDIF( VTK_FOUND )
+
+INCLUDE_DIRECTORIES( 
+  ${Exercise34_SOURCE_DIR} 
+  )
+
+ADD_EXECUTABLE( myProject34 MACOSX_BUNDLE itkReadITKImage3DSegmentShowVTK.cxx )
+
+TARGET_LINK_LIBRARIES( myProject34
+    ${ITK_LIBRARIES}
+    vtkWidgets vtkRendering vtkGraphics vtkHybrid 
+    vtkImaging vtkIO vtkFiltering vtkCommon )
+
