@@ -7,11 +7,10 @@
 # vtkImageReader2Factory.
 #
 PROJECT(VTKImageViewer)
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 FIND_PACKAGE(VTK REQUIRED)
-IF(VTK_FOUND)
-  INCLUDE(${VTK_USE_FILE})
-ENDIF(VTK_FOUND)
+INCLUDE(${VTK_USE_FILE})
 
 # VTKMFCSettings.cmake was copied from the CVS HEAD revision of VTK
 # on Feb. 9, 2007 (VTK/GUISupport/MFC/VTKMFCSettings.cmake)
