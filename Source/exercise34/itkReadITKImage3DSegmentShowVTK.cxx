@@ -129,9 +129,9 @@ int main(int argc, char * argv [] )
 
     filter->SetInput( reader->GetOutput() );
 
-    filter->SetNumberOfIterations(2);
+    filter->SetNumberOfIterations(5);
     filter->SetReplaceValue(255);
-    filter->SetMultiplier(2.5);
+    filter->SetMultiplier(1.8);
 
 
     // Obtain center index of the image
@@ -155,6 +155,13 @@ int main(int argc, char * argv [] )
 
     filter->SetSeed( seed );
 
+    filter->Update();
+
+    typedef  itk::ImageFileWriter< ImageType  >  WriterType;
+    WriterType::Pointer writer = WriterType::New();
+    writer->SetFileName("segmentation.mha");
+    writer->SetInput( filter->GetOutput() );
+    writer->Update();
 
     typedef itk::VTKImageExport< ImageType > ExportFilterType;
     ExportFilterType::Pointer itkExporter1 = ExportFilterType::New();
@@ -256,7 +263,7 @@ int main(int argc, char * argv [] )
 
     // Draw contours around the segmented regions
     vtkContourFilter * contour = vtkContourFilter::New();
-    contour->SetInputData( vtkImporter2->GetOutput() );
+    contour->SetInputConnection( vtkImporter2->GetOutputPort() );
     contour->SetValue(0, 128); // edges of a binary image with values 0,255
 
 
@@ -264,7 +271,7 @@ int main(int argc, char * argv [] )
     vtkActor          * polyActor  = vtkActor::New();
 
     polyActor->SetMapper( polyMapper );
-    polyMapper->SetInputData( contour->GetOutput() );
+    polyMapper->SetInputConnection( contour->GetOutputPort() );
     polyMapper->ScalarVisibilityOff();
 
     vtkProperty * property = vtkProperty::New();
@@ -283,7 +290,7 @@ int main(int argc, char * argv [] )
       {
       vtkPolyDataWriter * writer = vtkPolyDataWriter::New();
       writer->SetFileName(argv[5]);
-      writer->SetInputData( contour->GetOutput() );
+      writer->SetInputConnection( contour->GetOutputPort() );
       writer->Write();
       }
 
