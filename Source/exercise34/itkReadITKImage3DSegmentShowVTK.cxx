@@ -173,6 +173,7 @@ int main(int argc, char * argv [] )
 
 
     vtkImporter1->Update();
+    vtkImporter2->Update();
 
     //------------------------------------------------------------------------
     // VTK pipeline.

@@ -151,6 +151,9 @@ int main(int argc, char * argv [] )
     vtkImageExport* vtkExporter = vtkImageExport::New();
     ConnectPipelines(vtkExporter, itkImporter);
 
+    vtkImporter->Update();
+    std::cout << "Updated Importer" << std::endl;
+
     vtkExporter->SetInputData( vtkImporter->GetOutput() );
 
     typedef itk::ImageFileWriter< ImageType > WriterType;

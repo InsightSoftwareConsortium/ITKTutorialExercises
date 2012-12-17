@@ -153,6 +153,8 @@ int main(int argc, char * argv [] )
     vtkImageImport* vtkImporter2 = vtkImageImport::New();
     ConnectPipelines(itkExporter2, vtkImporter2);
 
+    vtkImporter1->Update();
+    vtkImporter2->Update();
 
     //------------------------------------------------------------------------
     // VTK pipeline.
