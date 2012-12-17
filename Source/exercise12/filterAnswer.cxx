@@ -23,7 +23,7 @@ int main( int argc, char *argv[] )
   typedef itk::Image< InputPixelType,  Dimension >  InputImageType;
   typedef itk::Image< OutputPixelType, Dimension >  OutputImageType;
 
-                       
+
   //
   // We instantiate reader and writer types
   //
@@ -36,8 +36,8 @@ int main( int argc, char *argv[] )
   reader->SetFileName( argv[1] );
   writer->SetFileName( argv[2] );
 
-  typedef  itk::ConnectedThresholdImageFilter< 
-                                    InputImageType, 
+  typedef  itk::ConnectedThresholdImageFilter<
+                                    InputImageType,
                                     OutputImageType > ConnectedFilterType;
 
   ConnectedFilterType::Pointer connectedThreshold = ConnectedFilterType::New();
@@ -77,10 +77,10 @@ int main( int argc, char *argv[] )
 
 
 //
-//     Exercise 2:  Replace the ConnectedThresholdImageFilter with 
+//     Exercise 2:  Replace the ConnectedThresholdImageFilter with
 //                  the IsolatedConnectedImageFilter
 //
-//     HINT:  Instead of SetUpper() and SetSeed(), this filter requires 
+//     HINT:  Instead of SetUpper() and SetSeed(), this filter requires
 //            the methods SetSeed1(), SetSeed2() and SetUpperValueLimit().
 //
 //

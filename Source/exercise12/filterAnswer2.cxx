@@ -23,7 +23,7 @@ int main( int argc, char *argv[] )
   typedef itk::Image< InputPixelType,  Dimension >  InputImageType;
   typedef itk::Image< OutputPixelType, Dimension >  OutputImageType;
 
-                       
+
   //
   // We instantiate reader and writer types
   //
@@ -36,8 +36,8 @@ int main( int argc, char *argv[] )
   reader->SetFileName( argv[1] );
   writer->SetFileName( argv[2] );
 
-  typedef  itk::IsolatedConnectedImageFilter< 
-                                    InputImageType, 
+  typedef  itk::IsolatedConnectedImageFilter<
+                                    InputImageType,
                                     OutputImageType > ConnectedFilterType;
 
   ConnectedFilterType::Pointer isolatedConnected = ConnectedFilterType::New();

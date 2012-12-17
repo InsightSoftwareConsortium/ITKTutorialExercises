@@ -23,7 +23,7 @@ int main( int argc, char *argv[] )
   typedef itk::Image< InputPixelType,  Dimension >  InputImageType;
   typedef itk::Image< OutputPixelType, Dimension >  OutputImageType;
 
-                       
+
   //
   // We instantiate reader and writer types
   //
@@ -36,8 +36,8 @@ int main( int argc, char *argv[] )
   reader->SetFileName( argv[1] );
   writer->SetFileName( argv[2] );
 
-  typedef  itk::ConfidenceConnectedImageFilter< 
-                                    InputImageType, 
+  typedef  itk::ConfidenceConnectedImageFilter<
+                                    InputImageType,
                                     OutputImageType > ConnectedFilterType;
 
   ConnectedFilterType::Pointer confidenceConnected = ConnectedFilterType::New();
@@ -78,7 +78,7 @@ int main( int argc, char *argv[] )
 }
 
 //
-//     Exercise:  Replace the ConfidenceConnectedImageFilter with 
+//     Exercise:  Replace the ConfidenceConnectedImageFilter with
 //                the ConnectedThresholdImageFilter
 //
 //     HINT: Instead of SetMultiplier(), SetInitialNeighborhoodRadius() and
