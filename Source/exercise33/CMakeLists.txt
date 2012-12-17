@@ -7,14 +7,14 @@ INCLUDE (${USE_ITK_FILE})
 FIND_PACKAGE(VTK REQUIRED)
 INCLUDE (${USE_VTK_FILE})
 
-INCLUDE_DIRECTORIES( 
-  ${Exercise33_SOURCE_DIR} 
+INCLUDE_DIRECTORIES(
+  ${Exercise33_SOURCE_DIR}
   )
 
 ADD_EXECUTABLE( myProject33 MACOSX_BUNDLE itkReadITKImageSegmentShowVTK.cxx )
 
 TARGET_LINK_LIBRARIES( myProject33
     ${ITK_LIBRARIES}
-    vtkRendering vtkGraphics vtkHybrid vtkImaging 
-    vtkIO vtkFiltering vtkCommon )
+    ${VTK_LIBRARIES}
+    )
 

@@ -7,14 +7,13 @@ INCLUDE (${USE_ITK_FILE})
 FIND_PACKAGE(VTK REQUIRED)
 INCLUDE (${USE_VTK_FILE})
 
-INCLUDE_DIRECTORIES( 
-  ${Exercise32_SOURCE_DIR} 
+INCLUDE_DIRECTORIES(
+  ${Exercise32_SOURCE_DIR}
   )
 
 ADD_EXECUTABLE( myProject32 MACOSX_BUNDLE itkReadITKImageShowVTK.cxx )
 
 TARGET_LINK_LIBRARIES( myProject32
-    ${ITK_LIBRARIES} 
-    vtkRendering vtkGraphics vtkHybrid vtkImaging 
-    vtkIO vtkFiltering vtkCommon )
-
+    ${ITK_LIBRARIES}
+    ${VTK_LIBRARIES}
+    )

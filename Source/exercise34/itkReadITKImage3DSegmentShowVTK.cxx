@@ -9,8 +9,8 @@
   Copyright (c) 2002 Insight Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -99,7 +99,7 @@ void ConnectPipelines(VTK_Exporter* exporter, ITK_Importer importer)
  * well.
  */
 int main(int argc, char * argv [] )
-{  
+{
 
   // Load a color image using ITK and display it with VTK
 
@@ -110,13 +110,13 @@ int main(int argc, char * argv [] )
     std::cerr << "[seedX seedY seedZ] [output.vtk] [surface=0 wireframe=1]" << std::endl;
     return 1;
     }
-  
+
   try
     {
     typedef unsigned char PixelType;
     const unsigned int Dimension = 3;
     typedef itk::Image< PixelType, Dimension > ImageType;
-    
+
     typedef itk::ImageFileReader< ImageType > ReaderType;
 
     ReaderType::Pointer reader  = ReaderType::New();
@@ -135,7 +135,7 @@ int main(int argc, char * argv [] )
 
 
     // Obtain center index of the image
-    // 
+    //
     ImageType::Pointer inputImage = reader->GetOutput();
     ImageType::SizeType  size  = inputImage->GetBufferedRegion().GetSize();
     ImageType::IndexType start = inputImage->GetBufferedRegion().GetIndex();
@@ -154,8 +154,8 @@ int main(int argc, char * argv [] )
       }
 
     filter->SetSeed( seed );
-      
-    
+
+
     typedef itk::VTKImageExport< ImageType > ExportFilterType;
     ExportFilterType::Pointer itkExporter1 = ExportFilterType::New();
     ExportFilterType::Pointer itkExporter2 = ExportFilterType::New();
@@ -165,15 +165,15 @@ int main(int argc, char * argv [] )
 
     // Create the vtkImageImport and connect it to the
     // itk::VTKImageExport instance.
-    vtkImageImport* vtkImporter1 = vtkImageImport::New();  
+    vtkImageImport* vtkImporter1 = vtkImageImport::New();
     ConnectPipelines(itkExporter1, vtkImporter1);
-    
-    vtkImageImport* vtkImporter2 = vtkImageImport::New();  
+
+    vtkImageImport* vtkImporter2 = vtkImageImport::New();
     ConnectPipelines(itkExporter2, vtkImporter2);
-    
+
 
     vtkImporter1->Update();
-     
+
     //------------------------------------------------------------------------
     // VTK pipeline.
     //------------------------------------------------------------------------
@@ -187,7 +187,7 @@ int main(int argc, char * argv [] )
     renWin->SetSize(500, 500);
     renWin->AddRenderer(renderer);
     iren->SetRenderWindow(renWin);
-    
+
 
     // use cell picker for interacting with the image orthogonal views.
     //
@@ -197,7 +197,7 @@ int main(int argc, char * argv [] )
 
     //assign default props to the ipw's texture plane actor
     vtkProperty * ipwProp = vtkProperty::New();
-     
+
 
     // Create 3 orthogonal view using the ImagePlaneWidget
     //
@@ -208,7 +208,7 @@ int main(int argc, char * argv [] )
     // The 3 image plane widgets are used to probe the dataset.
     //
     xImagePlaneWidget->DisplayTextOn();
-    xImagePlaneWidget->SetInput(vtkImporter1->GetOutput());
+    xImagePlaneWidget->SetInputData(vtkImporter1->GetOutput());
     xImagePlaneWidget->SetPlaneOrientationToXAxes();
     xImagePlaneWidget->SetSliceIndex(size[0]/2);
     xImagePlaneWidget->SetPicker(picker);
@@ -219,7 +219,7 @@ int main(int argc, char * argv [] )
     xImagePlaneWidget->SetResliceInterpolateToNearestNeighbour();
 
     yImagePlaneWidget->DisplayTextOn();
-    yImagePlaneWidget->SetInput(vtkImporter1->GetOutput());
+    yImagePlaneWidget->SetInputData(vtkImporter1->GetOutput());
     yImagePlaneWidget->SetPlaneOrientationToYAxes();
     yImagePlaneWidget->SetSliceIndex(size[1]/2);
     yImagePlaneWidget->SetPicker(picker);
@@ -230,7 +230,7 @@ int main(int argc, char * argv [] )
     yImagePlaneWidget->SetLookupTable(xImagePlaneWidget->GetLookupTable());
 
     zImagePlaneWidget->DisplayTextOn();
-    zImagePlaneWidget->SetInput(vtkImporter1->GetOutput());
+    zImagePlaneWidget->SetInputData(vtkImporter1->GetOutput());
     zImagePlaneWidget->SetPlaneOrientationToZAxes();
     zImagePlaneWidget->SetSliceIndex(size[2]/2);
     zImagePlaneWidget->SetPicker(picker);
@@ -241,10 +241,10 @@ int main(int argc, char * argv [] )
 
     xImagePlaneWidget->SetInteractor( iren );
     xImagePlaneWidget->On();
-     
+
     yImagePlaneWidget->SetInteractor( iren );
     yImagePlaneWidget->On();
-     
+
     zImagePlaneWidget->SetInteractor( iren );
     zImagePlaneWidget->On();
 
@@ -255,7 +255,7 @@ int main(int argc, char * argv [] )
 
     // Draw contours around the segmented regions
     vtkContourFilter * contour = vtkContourFilter::New();
-    contour->SetInput( vtkImporter2->GetOutput() );
+    contour->SetInputData( vtkImporter2->GetOutput() );
     contour->SetValue(0, 128); // edges of a binary image with values 0,255
 
 
@@ -263,7 +263,7 @@ int main(int argc, char * argv [] )
     vtkActor          * polyActor  = vtkActor::New();
 
     polyActor->SetMapper( polyMapper );
-    polyMapper->SetInput( contour->GetOutput() );
+    polyMapper->SetInputData( contour->GetOutput() );
     polyMapper->ScalarVisibilityOff();
 
     vtkProperty * property = vtkProperty::New();
@@ -275,17 +275,17 @@ int main(int argc, char * argv [] )
     property->SetRepresentationToSurface();
 
     polyActor->SetProperty( property );
-  
+
     renderer->AddActor( polyActor );
-    
+
     if( argc > 5 )
       {
       vtkPolyDataWriter * writer = vtkPolyDataWriter::New();
       writer->SetFileName(argv[5]);
-      writer->SetInput( contour->GetOutput() );
+      writer->SetInputData( contour->GetOutput() );
       writer->Write();
       }
- 
+
     if( argc > 6 )
       {
       int representation = atoi( argv[6] );
@@ -329,6 +329,6 @@ int main(int argc, char * argv [] )
     }
 
 
-  
+
   return 0;
 }

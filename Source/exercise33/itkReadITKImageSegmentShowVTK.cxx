@@ -9,8 +9,8 @@
   Copyright (c) 2002 Insight Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -98,7 +98,7 @@ void ConnectPipelines(VTK_Exporter* exporter, ITK_Importer importer)
  * well.
  */
 int main(int argc, char * argv [] )
-{  
+{
 
   // Load a color image using ITK and display it with VTK
 
@@ -108,13 +108,13 @@ int main(int argc, char * argv [] )
     std::cerr << "Usage: " << argv[0] << " inputImageFilename " << std::endl;
     return 1;
     }
-  
+
   try
     {
     typedef unsigned char PixelType;
     const unsigned int Dimension = 2;
     typedef itk::Image< PixelType, Dimension > ImageType;
-    
+
     typedef itk::ImageFileReader< ImageType > ReaderType;
 
     ReaderType::Pointer reader  = ReaderType::New();
@@ -136,8 +136,8 @@ int main(int argc, char * argv [] )
     index[1] = 100;
 
     filter->SetSeed( index );
-      
-    
+
+
     typedef itk::VTKImageExport< ImageType > ExportFilterType;
     ExportFilterType::Pointer itkExporter1 = ExportFilterType::New();
     ExportFilterType::Pointer itkExporter2 = ExportFilterType::New();
@@ -147,22 +147,22 @@ int main(int argc, char * argv [] )
 
     // Create the vtkImageImport and connect it to the
     // itk::VTKImageExport instance.
-    vtkImageImport* vtkImporter1 = vtkImageImport::New();  
+    vtkImageImport* vtkImporter1 = vtkImageImport::New();
     ConnectPipelines(itkExporter1, vtkImporter1);
-    
-    vtkImageImport* vtkImporter2 = vtkImageImport::New();  
+
+    vtkImageImport* vtkImporter2 = vtkImageImport::New();
     ConnectPipelines(itkExporter2, vtkImporter2);
-    
+
 
     //------------------------------------------------------------------------
     // VTK pipeline.
     //------------------------------------------------------------------------
-    
+
     // Create a vtkImageActor to help render the image.  Connect it to
     // the vtkImporter instance.
     vtkImageActor* actor = vtkImageActor::New();
-    actor->SetInput(vtkImporter1->GetOutput());
-    
+    actor->SetInputData(vtkImporter1->GetOutput());
+
     vtkInteractorStyleImage * interactorStyle = vtkInteractorStyleImage::New();
 
 
@@ -171,12 +171,12 @@ int main(int argc, char * argv [] )
     vtkRenderer* renderer = vtkRenderer::New();
     vtkRenderWindow* renWin = vtkRenderWindow::New();
     vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
-    
+
     renWin->SetSize(500, 500);
     renWin->AddRenderer(renderer);
     iren->SetRenderWindow(renWin);
     iren->SetInteractorStyle( interactorStyle );
-    
+
     // Add the vtkImageActor to the renderer for display.
     renderer->AddActor(actor);
     renderer->SetBackground(0.4392, 0.5020, 0.5647);
@@ -184,7 +184,7 @@ int main(int argc, char * argv [] )
 
     // Draw contours around the segmented regions
     vtkContourFilter * contour = vtkContourFilter::New();
-    contour->SetInput( vtkImporter2->GetOutput() );
+    contour->SetInputData( vtkImporter2->GetOutput() );
     contour->SetValue(0, 128); // edges of a binary image with values 0,255
 
 
@@ -192,9 +192,9 @@ int main(int argc, char * argv [] )
     vtkActor          * polyActor  = vtkActor::New();
 
     polyActor->SetMapper( polyMapper );
-    polyMapper->SetInput( contour->GetOutput() );
+    polyMapper->SetInputData( contour->GetOutput() );
     polyMapper->ScalarVisibilityOff();
-    
+
 
     vtkProperty * property = vtkProperty::New();
     property->SetRepresentationToSurface();
@@ -205,7 +205,7 @@ int main(int argc, char * argv [] )
     property->SetLineWidth(2.0);
 
     polyActor->SetProperty( property );
-    
+
     renderer->AddActor( polyActor );
 
     // Bring up the render window and begin interaction.
@@ -214,7 +214,7 @@ int main(int argc, char * argv [] )
 
     // Release all VTK components
     actor->Delete();
-    interactorStyle->Delete(); 
+    interactorStyle->Delete();
     polyActor->Delete();
     vtkImporter1->Delete();
     vtkImporter2->Delete();
@@ -232,6 +232,6 @@ int main(int argc, char * argv [] )
     }
 
 
-  
+
   return 0;
 }

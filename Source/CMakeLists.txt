@@ -1,38 +1,39 @@
-SUBDIRS(
-  exercise1
-  exercise2
-  exercise3
-  exercise4
-  exercise5
-  exercise6
-  exercise7
-  exercise8
-  exercise9
-  exercise10
-  exercise11
-  exercise12
-  exercise13
-  exercise14
-  exercise15
-  exercise16
-  exercise17
-  exercise18
-# exercise19
-  exercise20
-  exercise21
-  exercise22
-  exercise23
-  exercise24
-  exercise25
-  exercise26
-  exercise27
-  exercise28
-  exercise29
-  exercise31
-# exercise32
-# exercise33
-# exercise34
- )
+ADD_SUBDIRECTORY( exercise1 )
+ADD_SUBDIRECTORY( exercise2 )
+ADD_SUBDIRECTORY( exercise3 )
+ADD_SUBDIRECTORY( exercise4 )
+ADD_SUBDIRECTORY( exercise5 )
+ADD_SUBDIRECTORY( exercise6 )
+ADD_SUBDIRECTORY( exercise7 )
+ADD_SUBDIRECTORY( exercise8 )
+ADD_SUBDIRECTORY( exercise9 )
+ADD_SUBDIRECTORY( exercise10 )
+ADD_SUBDIRECTORY( exercise11 )
+ADD_SUBDIRECTORY( exercise12 )
+ADD_SUBDIRECTORY( exercise13 )
+ADD_SUBDIRECTORY( exercise14 )
+ADD_SUBDIRECTORY( exercise15 )
+ADD_SUBDIRECTORY( exercise16 )
+ADD_SUBDIRECTORY( exercise17 )
+ADD_SUBDIRECTORY( exercise18 )
+ADD_SUBDIRECTORY( exercise20 )
+ADD_SUBDIRECTORY( exercise21 )
+ADD_SUBDIRECTORY( exercise22 )
+ADD_SUBDIRECTORY( exercise23 )
+ADD_SUBDIRECTORY( exercise24 )
+ADD_SUBDIRECTORY( exercise25 )
+ADD_SUBDIRECTORY( exercise26 )
+ADD_SUBDIRECTORY( exercise27 )
+ADD_SUBDIRECTORY( exercise28 )
+ADD_SUBDIRECTORY( exercise29 )
+ADD_SUBDIRECTORY( exercise31 )
+
+IF(USE_VTK)
+  ADD_SUBDIRECTORY( exercise19 )
+  ADD_SUBDIRECTORY( exercise32 )
+  ADD_SUBDIRECTORY( exercise33 )
+  ADD_SUBDIRECTORY( exercise34 )
+ENDIF(USE_VTK)
 
 IF(WIN32)
   IF(NOT BORLAND)

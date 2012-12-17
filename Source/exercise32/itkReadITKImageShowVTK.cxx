@@ -9,8 +9,8 @@
   Copyright (c) 2002 Insight Consortium. All rights reserved.
   See ITKCopyright.txt or http://www.itk.org/HTML/Copyright.htm for details.
 
-     This software is distributed WITHOUT ANY WARRANTY; without even 
-     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+     This software is distributed WITHOUT ANY WARRANTY; without even
+     the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
      PURPOSE.  See the above copyright notices for more information.
 
 =========================================================================*/
@@ -32,7 +32,7 @@
 #include "vtkRenderer.h"
 #include "vtkRenderWindow.h"
 #include "vtkRenderWindowInteractor.h"
-#include "vtkInteractorStyleImage.h" 
+#include "vtkInteractorStyleImage.h"
 
 /**
  * This will be setup as a callback for a progress event on an ITK
@@ -41,13 +41,13 @@
 struct ProgressDisplay
 {
   ProgressDisplay(itk::ProcessObject* process): m_Process(process) {}
-  
+
   void Display()
     {
     float progress = m_Process->GetProgress()*100.0;
     std::cout << "Progress " << progress << " percent." << std::endl;
     }
-  
+
   itk::ProcessObject::Pointer m_Process;
 };
 
@@ -109,7 +109,7 @@ void ConnectPipelines(VTK_Exporter* exporter, ITK_Importer importer)
  * well.
  */
 int main(int argc, char * argv [] )
-{  
+{
 
   // Load a color image using ITK and display it with VTK
 
@@ -119,12 +119,12 @@ int main(int argc, char * argv [] )
     std::cerr << "Usage: " << argv[0] << " inputImageFilename " << std::endl;
     return 1;
     }
-  
+
   try
     {
     typedef itk::RGBPixel< unsigned char > PixelType;
     typedef itk::Image< PixelType, 2 > ImageType;
-    
+
     typedef itk::ImageFileReader< ImageType > ReaderType;
 
     ReaderType::Pointer reader  = ReaderType::New();
@@ -138,25 +138,25 @@ int main(int argc, char * argv [] )
 
     // Create the vtkImageImport and connect it to the
     // itk::VTKImageExport instance.
-    vtkImageImport* vtkImporter = vtkImageImport::New();  
+    vtkImageImport* vtkImporter = vtkImageImport::New();
     ConnectPipelines(itkExporter, vtkImporter);
-    
 
-    // Just for double checking export it from VTK back into ITK 
+
+    // Just for double checking export it from VTK back into ITK
     // and save it into a file.
     typedef itk::VTKImageImport< ImageType > ImportFilterType;
     ImportFilterType::Pointer itkImporter = ImportFilterType::New();
 
 
-    vtkImageExport* vtkExporter = vtkImageExport::New();  
+    vtkImageExport* vtkExporter = vtkImageExport::New();
     ConnectPipelines(vtkExporter, itkImporter);
-    
-    vtkExporter->SetInput( vtkImporter->GetOutput() );
-    
+
+    vtkExporter->SetInputData( vtkImporter->GetOutput() );
+
     typedef itk::ImageFileWriter< ImageType > WriterType;
     WriterType::Pointer itkWriter = WriterType::New();
     itkWriter->SetInput( itkImporter->GetOutput() );
-    
+
     if( argc > 2 )
       {
       const char * filename = argv[2];
@@ -168,12 +168,12 @@ int main(int argc, char * argv [] )
     //------------------------------------------------------------------------
     // VTK pipeline.
     //------------------------------------------------------------------------
-    
+
     // Create a vtkImageActor to help render the image.  Connect it to
     // the vtkImporter instance.
     vtkImageActor* actor = vtkImageActor::New();
-    actor->SetInput(vtkImporter->GetOutput());
-    
+    actor->SetInputData(vtkImporter->GetOutput());
+
     vtkInteractorStyleImage * interactorStyle = vtkInteractorStyleImage::New();
 
     // Create a renderer, render window, and render window interactor to
@@ -181,12 +181,12 @@ int main(int argc, char * argv [] )
     vtkRenderer* renderer = vtkRenderer::New();
     vtkRenderWindow* renWin = vtkRenderWindow::New();
     vtkRenderWindowInteractor* iren = vtkRenderWindowInteractor::New();
-    
+
     renWin->SetSize(500, 500);
     renWin->AddRenderer(renderer);
     iren->SetRenderWindow(renWin);
     iren->SetInteractorStyle( interactorStyle );
-    
+
     // Add the vtkImageActor to the renderer for display.
     renderer->AddActor(actor);
     renderer->SetBackground(0.4392, 0.5020, 0.5647);
@@ -197,7 +197,7 @@ int main(int argc, char * argv [] )
 
     // Release all VTK components
     actor->Delete();
-    interactorStyle->Delete(); 
+    interactorStyle->Delete();
     vtkImporter->Delete();
     vtkExporter->Delete();
     renWin->Delete();
@@ -211,6 +211,6 @@ int main(int argc, char * argv [] )
     }
 
 
-  
+
   return 0;
 }
