@@ -35,15 +35,7 @@ IF(USE_VTK)
   ADD_SUBDIRECTORY( exercise34 )
 ENDIF(USE_VTK)
 
-IF(WIN32)
-  IF(NOT BORLAND)
-    IF(NOT CYGWIN)
-      IF(NOT MINGW)
-#       SUBDIRS(
-#  exercise35
-#         )
-      ENDIF(NOT MINGW)
-    ENDIF(NOT CYGWIN)
-  ENDIF(NOT BORLAND)
-ENDIF(WIN32)
+IF(MSVC)
+#  SUBDIRS( exercise35 ) # totally outdated
+ENDIF(MSVC)
 

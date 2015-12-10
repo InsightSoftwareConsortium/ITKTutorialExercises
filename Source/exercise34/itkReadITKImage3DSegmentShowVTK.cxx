@@ -17,8 +17,7 @@
 
 #include "itkCommand.h"
 #include "itkImage.h"
-#include "itkVTKImageExport.h"
-#include "itkVTKImageImport.h"
+#include "itkImageToVTKImageFilter.h"
 #include "itkConfidenceConnectedImageFilter.h"
 #include "itkCastImageFilter.h"
 #include "itkRGBPixel.h"
@@ -43,49 +42,6 @@
 
 
 /**
- * This function will connect the given itk::VTKImageExport filter to
- * the given vtkImageImport filter.
- */
-template <typename ITK_Exporter, typename VTK_Importer>
-void ConnectPipelines(ITK_Exporter exporter, VTK_Importer* importer)
-{
-  importer->SetUpdateInformationCallback(exporter->GetUpdateInformationCallback());
-  importer->SetPipelineModifiedCallback(exporter->GetPipelineModifiedCallback());
-  importer->SetWholeExtentCallback(exporter->GetWholeExtentCallback());
-  importer->SetSpacingCallback(exporter->GetSpacingCallback());
-  importer->SetOriginCallback(exporter->GetOriginCallback());
-  importer->SetScalarTypeCallback(exporter->GetScalarTypeCallback());
-  importer->SetNumberOfComponentsCallback(exporter->GetNumberOfComponentsCallback());
-  importer->SetPropagateUpdateExtentCallback(exporter->GetPropagateUpdateExtentCallback());
-  importer->SetUpdateDataCallback(exporter->GetUpdateDataCallback());
-  importer->SetDataExtentCallback(exporter->GetDataExtentCallback());
-  importer->SetBufferPointerCallback(exporter->GetBufferPointerCallback());
-  importer->SetCallbackUserData(exporter->GetCallbackUserData());
-}
-
-/**
- * This function will connect the given vtkImageExport filter to
- * the given itk::VTKImageImport filter.
- */
-template <typename VTK_Exporter, typename ITK_Importer>
-void ConnectPipelines(VTK_Exporter* exporter, ITK_Importer importer)
-{
-  importer->SetUpdateInformationCallback(exporter->GetUpdateInformationCallback());
-  importer->SetPipelineModifiedCallback(exporter->GetPipelineModifiedCallback());
-  importer->SetWholeExtentCallback(exporter->GetWholeExtentCallback());
-  importer->SetSpacingCallback(exporter->GetSpacingCallback());
-  importer->SetOriginCallback(exporter->GetOriginCallback());
-  importer->SetScalarTypeCallback(exporter->GetScalarTypeCallback());
-  importer->SetNumberOfComponentsCallback(exporter->GetNumberOfComponentsCallback());
-  importer->SetPropagateUpdateExtentCallback(exporter->GetPropagateUpdateExtentCallback());
-  importer->SetUpdateDataCallback(exporter->GetUpdateDataCallback());
-  importer->SetDataExtentCallback(exporter->GetDataExtentCallback());
-  importer->SetBufferPointerCallback(exporter->GetBufferPointerCallback());
-  importer->SetCallbackUserData(exporter->GetCallbackUserData());
-}
-
-
-/**
  * This program implements an example connection between ITK and VTK
  * pipelines.  The combined pipeline flows as follows:
  *
@@ -93,14 +49,9 @@ void ConnectPipelines(VTK_Exporter* exporter, ITK_Importer importer)
  *    vtkImageImport ==> vtkImagePlaneWidget
  *
  * The resulting vtkImagePlaneWidget is displayed in a vtkRenderWindow.
- * Whenever the VTK pipeline executes, information is propagated
- * through the ITK pipeline.  If the ITK pipeline is out of date, it
- * will re-execute and cause the VTK pipeline to update properly as
- * well.
  */
 int main(int argc, char * argv [] )
 {
-
   // Load a color image using ITK and display it with VTK
 
   if( argc < 2 )
@@ -163,24 +114,13 @@ int main(int argc, char * argv [] )
     writer->SetInput( filter->GetOutput() );
     writer->Update();
 
-    typedef itk::VTKImageExport< ImageType > ExportFilterType;
-    ExportFilterType::Pointer itkExporter1 = ExportFilterType::New();
-    ExportFilterType::Pointer itkExporter2 = ExportFilterType::New();
-
-    itkExporter1->SetInput( reader->GetOutput() );
-    itkExporter2->SetInput( filter->GetOutput() );
-
-    // Create the vtkImageImport and connect it to the
-    // itk::VTKImageExport instance.
-    vtkImageImport* vtkImporter1 = vtkImageImport::New();
-    ConnectPipelines(itkExporter1, vtkImporter1);
-
-    vtkImageImport* vtkImporter2 = vtkImageImport::New();
-    ConnectPipelines(itkExporter2, vtkImporter2);
-
-
-    vtkImporter1->Update();
-    vtkImporter2->Update();
+	typedef itk::ImageToVTKImageFilter< ImageType > GlueFilterType;
+	GlueFilterType::Pointer converter1 = GlueFilterType::New();
+	converter1->SetInput(reader->GetOutput());
+	converter1->Update();
+	GlueFilterType::Pointer converter2 = GlueFilterType::New();
+	converter2->SetInput(filter->GetOutput());
+	converter2->Update();
 
     //------------------------------------------------------------------------
     // VTK pipeline.
@@ -216,7 +156,7 @@ int main(int argc, char * argv [] )
     // The 3 image plane widgets are used to probe the dataset.
     //
     xImagePlaneWidget->DisplayTextOn();
-    xImagePlaneWidget->SetInputData(vtkImporter1->GetOutput());
+	xImagePlaneWidget->SetInputData(converter1->GetOutput());
     xImagePlaneWidget->SetPlaneOrientationToXAxes();
     xImagePlaneWidget->SetSliceIndex(size[0]/2);
     xImagePlaneWidget->SetPicker(picker);
@@ -227,7 +167,7 @@ int main(int argc, char * argv [] )
     xImagePlaneWidget->SetResliceInterpolateToNearestNeighbour();
 
     yImagePlaneWidget->DisplayTextOn();
-    yImagePlaneWidget->SetInputData(vtkImporter1->GetOutput());
+	yImagePlaneWidget->SetInputData(converter2->GetOutput());
     yImagePlaneWidget->SetPlaneOrientationToYAxes();
     yImagePlaneWidget->SetSliceIndex(size[1]/2);
     yImagePlaneWidget->SetPicker(picker);
@@ -238,7 +178,7 @@ int main(int argc, char * argv [] )
     yImagePlaneWidget->SetLookupTable(xImagePlaneWidget->GetLookupTable());
 
     zImagePlaneWidget->DisplayTextOn();
-    zImagePlaneWidget->SetInputData(vtkImporter1->GetOutput());
+	zImagePlaneWidget->SetInputData(converter1->GetOutput());
     zImagePlaneWidget->SetPlaneOrientationToZAxes();
     zImagePlaneWidget->SetSliceIndex(size[2]/2);
     zImagePlaneWidget->SetPicker(picker);
@@ -263,7 +203,7 @@ int main(int argc, char * argv [] )
 
     // Draw contours around the segmented regions
     vtkContourFilter * contour = vtkContourFilter::New();
-    contour->SetInputConnection( vtkImporter2->GetOutputPort() );
+	contour->SetInputData(converter2->GetOutput());
     contour->SetValue(0, 128); // edges of a binary image with values 0,255
 
 
@@ -317,8 +257,6 @@ int main(int argc, char * argv [] )
     polyActor->Delete();
     picker->Delete();
     ipwProp->Delete();
-    vtkImporter1->Delete();
-    vtkImporter2->Delete();
     xImagePlaneWidget->Delete();
     yImagePlaneWidget->Delete();
     zImagePlaneWidget->Delete();
@@ -328,15 +266,11 @@ int main(int argc, char * argv [] )
     renWin->Delete();
     renderer->Delete();
     iren->Delete();
-
-
     }
   catch( itk::ExceptionObject & e )
     {
     std::cerr << "Exception catched !! " << e << std::endl;
     }
-
-
 
   return 0;
 }

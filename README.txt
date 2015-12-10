@@ -12,3 +12,5 @@ For more information, please visit
 
               http://www.itk.org
 
+More sample data can be downloaded from MIDAS:
+http://midas3.kitware.com/midas/folder/7756

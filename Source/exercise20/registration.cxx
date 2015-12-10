@@ -148,3 +148,11 @@ int main( int argc, char *argv[] )
   return 0;
 }
 
+//
+//     Exercise:  Track progress of the registration.
+//
+//     HINT:      Inherit from the itk::Command. Override its Execute method.
+//                If event is of type itk::IterationEvent display current
+//                iteration number etc from the optimizer (object).
+//
+
