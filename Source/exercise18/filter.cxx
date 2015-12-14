@@ -67,7 +67,7 @@ int main( int argc, char *argv[] )
 
 
   thresholdLevelSet->SetMaximumRMSError( 0.001 );
-  thresholdLevelSet->SetMaximumIterations( atoi( argv[8] ) );
+  thresholdLevelSet->SetNumberOfIterations(atoi(argv[8]));
 
   smoothing->SetInput( reader2->GetOutput() );
 
@@ -86,7 +86,7 @@ int main( int argc, char *argv[] )
 
   thresholdLevelSet->SetIsoSurfaceValue( 127.0 );
 
-  thresholdLevelSet->SetUseNegativeFeaturesOn();
+  thresholdLevelSet->ReverseExpansionDirectionOn();
 
 
   // 

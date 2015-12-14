@@ -78,7 +78,7 @@ int main( int argc, char *argv[] )
 
 
   geodesicActiveContourFilter->SetMaximumRMSError( 0.001 );
-  geodesicActiveContourFilter->SetMaximumIterations( atoi( argv[9] ) );
+  geodesicActiveContourFilter->SetNumberOfIterations(atoi(argv[9]));
 
   smoothing->SetInput( reader2->GetOutput() );
 
